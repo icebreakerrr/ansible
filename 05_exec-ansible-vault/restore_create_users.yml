@@ -1,0 +1,13 @@
+---
+- name: 사용자 삭제
+  hosts: all
+  vars_files:
+    - vars/secret.yml 
+  tasks:
+  - name: 다중 사용자 삭제
+    user:
+      name: "{{ item.name }}"
+      state: absent
+      remove: yes
+    with_items: "{{ newusers }}"   # 리스트 요소 한개씩 돌려서
+ # sha512 저거는 암호를 암호화하는것. 평문형태 전송 막기위함

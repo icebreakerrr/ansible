@@ -1,0 +1,35 @@
+--- 
+- name: task failure excercise
+  hosts: databases
+  
+  vars:
+    web_package: httpd
+    db_package: mariadb-server
+    db_service: mariadb
+  tasks:
+  - name: Check local time
+    command: date
+    register: command_result # 이 변수에 출력 내용 저장, 출력 저장 명령어 register
+    changed_when: false
+
+  #- name: Print local time
+  - debug: var=command_result.stdout  # 저장된 것 debug로 출력
+
+  - name: 블럭1
+    block:
+    - name: Install {{ web_package }} package
+      yum:
+        name: "{{ web_package }}"
+        state: present
+      failed_when: web_package == "httpd" #이 조건이면 fail임. 그러면 변수가 맞더라도 이 조건 우선이므로 fail나서 rescue로감
+    rescue:
+    - name: Install {{ db_package }} package
+      yum:
+        name: "{{ db_package }}"
+        state: present
+    
+    always:
+      - name: Start {{ db_service }} service
+        service:
+          name: "{{ db_service }}"
+          state: started

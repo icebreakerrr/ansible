@@ -1,0 +1,40 @@
+---
+- name: web package & firewall package
+  hosts: webservers
+  tasks:
+  - name: Install the packages  
+    yum:
+      name:
+      - httpd
+      - mod_ssl
+      - firewalld
+      state: latest
+  
+  - name: Start the service - httpd, firewalld
+    service: 
+      name: "{{ item }}"
+      state: started
+      enabled: yes
+    with_items:
+    - httpd
+    - firewalld
+
+  - name: Open the service port - http, https
+    firewalld:
+      service: "{{ item }}"
+      permanent: yes
+      immediate: yes
+      state: enabled
+    with_items:
+    - http
+    - https
+  - name: /var/www/html/hello/html
+    copy:
+      content: "Hello WOrld from {{ ansible_fqdn }}\n"
+      dest: /var/www/html/hello.html
+    notify: restart_httpd
+  handlers:
+    - name: restart_httpd
+      service: 
+        name: httpd
+        state: restarted

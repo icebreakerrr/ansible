@@ -1,0 +1,7 @@
+- name: 모든 서버 epel-release 패키지 설치
+  hosts: webservers #all
+  tasks:
+  - name: epel-release 패키지 설치
+    yum:
+      name: epel-release
+      state: latest

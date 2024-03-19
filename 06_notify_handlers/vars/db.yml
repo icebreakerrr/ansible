@@ -1,0 +1,9 @@
+pkg_db:
+  - mariadb-server
+  - python3-PyMySQL
+  - python3-pip 
+  # 그래야 db 설치시 python3-pip 설치해야 pip 명령어 사용가능
+
+svc_db: mariadb
+conf_src_url: "http://ansible.example.com/my.cnf.standard"
+conf_dest_file: /etc/my.conf

@@ -1,0 +1,11 @@
+---
+- name: 사용자 복구
+  hosts: all
+  vars_files: 
+    - secret2.yml
+  tasks:  
+  - name: 복구
+    user:
+      name: "{{ username }}"
+      state: absent
+      remove: yes

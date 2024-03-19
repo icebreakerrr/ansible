@@ -1,0 +1,12 @@
+---
+- name: 역할 설치
+  hosts: webservers
+  pre_tasks:
+  - name: install the gcc
+    yum:
+      name: 
+      - gcc
+      - make
+      state: latest
+  roles:
+  - croissant.git

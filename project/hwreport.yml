@@ -1,0 +1,67 @@
+---
+- name: 하드웨어 보고서 작성
+  hosts: all
+  tasks:
+  - name: /root/hwreport.txt 파일 생성
+    get_url: 
+      url: http://192.168.10.10/hwreport.empty
+      dest: /root/hwreport.txt
+
+  - name: /root/hwreport.txt - HOST 설정
+   # lineinfile, 파일 내에  내가 원하는 라인으로 교체
+   # replace
+    lineinfile:
+      path: /root/hwreport.txt
+      regexp: '^HOST='
+      line: "HOST={{ inventory_hostname }}"
+  
+  - name: /root/hwreport.txt - BIOS
+    replace:
+      path: /root/hwreport.txt
+      regexp: 'bios version'
+      replace: "{{ ansible_bios_version }}"
+  - name: /root/hwreport.txt - MEMORY
+    lineinfile:
+      path: /root/hwreport.txt      
+      line: 'MEMORY= {{ " ansible_memtotal_mb "}}'
+  
+  - name: /root/hwreport.txt = sda
+    lineinfile:
+      path: /root/hwreport.txt
+      regexp: '^SDA_DISK_SIZE='
+      line: |
+        {% if ansible_devices.sda is defined %}
+        "SDA_DISK_SIZE={{ ansible_devices.sda.size }}"
+        {% else %}
+        "SDA_DISK_SIZE=NONE"
+        {% endif %}
+  
+  #sdb
+  - name: /root/hwreport.txt = sdb
+    lineinfile:
+      path: /root/hwreport.txt
+      regexp: '^SDB_DISK_SIZE='
+      line: |
+        {% if ansible_devices.sdb is defined %}
+        SDB_DISK_SIZE={{ ansible_devices.sdb.size }}
+        {% else %}
+        SDB_DISK_SIZE=NONE
+        {% endif %}
+  
+  #sdc
+  - name: /root/hwreport.txt = sdc
+    lineinfile:
+      path: /root/hwreport.txt
+      regexp: '^SDC_DISK_SIZE='
+      line: |
+        {% if ansible_devices.sdc is defined %}
+        SDC_DISK_SIZE={{ ansible_devices.sdc.size }}
+        {% else %}
+        SDC_DISK_SIZE=NONE
+        {% endif %}
+
+  - name: 데이터 수집
+    fetch:
+      src: /root/hwreport.txt
+      dest: results/hwreport-{{ inventory_hostname }}.txt"
+      flat: yes #1줄로 얇게 받음

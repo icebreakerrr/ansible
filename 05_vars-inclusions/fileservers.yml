@@ -1,0 +1,17 @@
+---
+- name: 파일서버 구성
+  hosts: fileservers
+  tasks:
+    - name: 변수파일 입력
+      include_vars: paths.yml
+
+    - name: 외부 파일 생성
+      file:
+        path: "{{paths.fileserver}}"
+        state: directory
+        mode: 0755
+      register: result
+
+    - name: Debugs the results
+      debug:
+        var: result

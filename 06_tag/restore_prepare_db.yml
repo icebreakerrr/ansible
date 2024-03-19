@@ -1,0 +1,34 @@
+
+---
+- name: remove database packages
+  yum: 
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ db_packages }}"
+
+- name: remove_ small config file
+  file:
+    path: "{{ db_config_path }}"
+    state: absent
+  when: db_config_src_path_small is defined   
+  
+
+- name: remove_ large config file
+  file:
+    path: "{{ db_config_path }}"
+    state: absent
+  when: db_config_src_path_large is defined    
+
+
+- name: Update motd for development
+  copy:
+    content: "This is a development server"
+    dest: /etc/motd
+
+
+- name: Update motd for production
+  copy:
+    content: "This is a production server"
+    dest: /etc/motd
+
+

@@ -1,0 +1,24 @@
+--- 
+- name: task failure excercise
+  hosts: databases
+  
+  vars:
+    web_package: httpd
+    db_package: mariadb-server
+    db_service: mariadb
+  
+  tasks:
+    - name: Stop {{ db_service }} service
+      service:
+        name: "{{ db_service }}"
+        state: stopped
+    
+    - name: remove {{ web_package }} package 
+      yum:
+        name: "{{ web_package }}"
+        state: absent
+
+    - name: remove {{ db_package }} package
+      yum:
+        name: "{{ db_package }}"
+        state: absent

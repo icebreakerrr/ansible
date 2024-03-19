@@ -1,0 +1,21 @@
+---
+- name: /etc/motd 파일 삭제
+  hosts: all
+  gather_facts: false
+  tasks:
+  - name: /etc/motd 파일을 4대의 서버에 파일 삭제하기
+
+    file:
+      path: /etc/motd
+      state: absent
+
+  - name: /etc/motd 빈 파일 생성하기
+    file:
+      path: /etc/motd
+      state: touch
+    
+    # - name: /etc/motd 빈 파일 만들기
+    #   shell:
+    #     cmd: '> /etc/motd' #화일 비우는 명령
+    #멱등성 제공안해서 좋은 방법은 아니지만 가능하긴 함.
+    # ande shell

@@ -1,0 +1,51 @@
+---
+- name: 디스크 작업
+  hosts: webservers
+  tasks:
+  - name: 파티션 작업
+    parted: #ande parted
+      device: /dev/sdb
+      number: 1  #통쨰로 다 잡음
+      state: present #없는것만 생성
+      #part_end 없으면 기본값으로 전체 다 잡음.
+      flags: [ lvm ]
+    when: ansible_devices.sdb is defined
+    # 디스크가 있어야만 작업하도록 구문 설정
+    # 팩트변수로 변수 체크
+
+  - name: VG 생성 # VG 생성시 PV 넣으면 앤서블에선 자동으로 PV 생성
+    lvg: #ande lvg
+      vg: research
+      pvs: /dev/sdb1
+    when: ansible_devices.sdb.partitions.sdb1 is defined
+  
+  - name: LV 생성
+    lvol: #ande lvol
+      vg: research
+      lv: data
+      size: 500m
+      # 기본 메가바이트 단위, 기가바이트는 g 붙이기
+    when: 
+    - ansible_lvm.vgs.research is defined
+    - ansible_lvm.vgs.research.free_g | float >= 0.5 #0.5기가 이상
+  
+  - block:
+    - name: 파일 시스템 생성
+      filesystem: #ande filesystem
+        dev: /dev/research/data
+        fstype: ext4
+ 
+    rescue:
+    - name: 파일 시스템 마운트 상태 메세지 출력
+      debug:
+        msg: 파일 시스템이 마운트 되지 않습니다.
+    
+
+  - name: 마운트 작업
+    mount:
+      path: /mnt/research #마운트포인터
+      src: /dev/research/data
+      opts: defaults #로컬
+      state: mounted # /etc/mount 등록
+      fstype: ext4
+

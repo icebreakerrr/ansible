@@ -1,0 +1,24 @@
+---
+- name: 각 데이터 센터 시간 동기화
+  hosts: datacenters
+  # vars:
+  #   timesyn_ntp_servers:
+  #   - hostname: time.bora.net
+  #     iburst: true
+  #그룹변수 등록해놨기 때문
+  roles:
+  - role: rhel-system-roles.timesync
+
+
+  post_tasks:
+  - name: 타임존 복원
+    timezone:
+      name: Asia/Seoul
+    # name: "{{ host_timezone}}"
+    # vars:
+    #   host_timezone = Asia/Seoul
+
+  - name: chronyd 서비스 재기동
+    service:
+      name: chronyd
+      state: restarted

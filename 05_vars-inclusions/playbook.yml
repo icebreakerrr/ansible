@@ -1,0 +1,15 @@
+---
+- name: 파일서버 패키지 생성
+  hosts: fileservers
+  tasks: 
+    - name: include the variable
+      include_tasks: install_package.yml
+      vars:
+        packages:
+          web_pkg: epel-release
+
+    - name: installs the package
+      include_tasks: install_package.yml
+      vars:
+        packages: 
+          wev_pkg: tomcat

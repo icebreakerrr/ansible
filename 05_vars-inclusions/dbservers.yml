@@ -1,0 +1,16 @@
+- name: db 서버 구성
+  hosts: dbservers
+  tasks:  
+    - name: 변수 파일 입력
+      include_vars: paths.yml
+
+    - name: 외부 디렉토리 생성
+      file:
+        path: "{{ paths.dbpath }}"
+        state: directory
+        mode: 0755
+      register: result
+    
+    - name: Debugs the results
+      debug:
+        var: result
