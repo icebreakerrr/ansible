@@ -1,5 +1,0 @@
----
-- name: Apache Role Test
-  hosts: webservers
-  roles:
-  - apache

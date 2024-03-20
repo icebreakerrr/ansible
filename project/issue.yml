@@ -1,8 +1,0 @@
----
-- name: /etc/issue 파일 생성
-  hosts: all
-  tasks:
-  - name: /etc/issue 파일 배포
-    copy:
-      content: "{{ mystring }}\n"
-      dest: /etc/issue

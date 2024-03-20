@@ -1,7 +1,0 @@
-HOST=ansible3.example.com
-BIOS=6.00
-MEMORY=toal memory in mb
-"SDA_DISK_SIZE=20.00 GB"
-SDB_DISK_SIZE=1.00 GB
-SDC_DISK_SIZE=NONE
-MEMORY=  ansible_memtotal_mb 

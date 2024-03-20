@@ -1,3 +1,0 @@
-vars:
-  pw_developer: Imadev
-  pw_manager: Imamgr
