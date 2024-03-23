@@ -16,7 +16,7 @@
     file_web: /var/www/html/index.html
     svc_web: httpd
     fw_http: http
-    fw_https: http
+    fw_https: https
   tasks: 
 # 1) 웹 패키지 설치(httpd, mod_ssl)
   - name: 웹 패키지 설치({{ pkg_web_http }}, {{ pkg_web_https }})
